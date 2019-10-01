@@ -5874,11 +5874,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\work\\dev\\Pluralsight\\GradeBook\\test\\GradeBook.Tests\\GradeBook.Tests.csproj",
+      "projectUniqueName": "C:\\Github\\personal\\csharp-fundamentals-dev\\test\\GradeBook.Tests\\GradeBook.Tests.csproj",
       "projectName": "GradeBook.Tests",
-      "projectPath": "c:\\work\\dev\\Pluralsight\\GradeBook\\test\\GradeBook.Tests\\GradeBook.Tests.csproj",
+      "projectPath": "C:\\Github\\personal\\csharp-fundamentals-dev\\test\\GradeBook.Tests\\GradeBook.Tests.csproj",
       "packagesPath": "C:\\Users\\SantiagoC\\.nuget\\packages\\",
-      "outputPath": "c:\\work\\dev\\Pluralsight\\GradeBook\\test\\GradeBook.Tests\\obj\\",
+      "outputPath": "C:\\Github\\personal\\csharp-fundamentals-dev\\test\\GradeBook.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -5895,8 +5895,8 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "c:\\work\\dev\\Pluralsight\\GradeBook\\src\\GradeBook\\GradeBook.csproj": {
-              "projectPath": "c:\\work\\dev\\Pluralsight\\GradeBook\\src\\GradeBook\\GradeBook.csproj"
+            "C:\\Github\\personal\\csharp-fundamentals-dev\\src\\GradeBook\\GradeBook.csproj": {
+              "projectPath": "C:\\Github\\personal\\csharp-fundamentals-dev\\src\\GradeBook\\GradeBook.csproj"
             }
           }
         }
