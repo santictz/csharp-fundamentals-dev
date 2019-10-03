@@ -7,19 +7,27 @@ namespace GradeBook
     {
         static void Main(string[] args)
         {
-            var book = new Book("Scott GradeBook");
-            var done = false;
+            var book = new InMemoryBook("Scott GradeBook");
 
             book.GradeAdded += OnGradeAdded;
 
-            while (!done)
+            var stats = book.GetStatistics();
+
+            System.Console.WriteLine($"The lowest grade is {stats.Low}");
+            System.Console.WriteLine($"The letter grade is {stats.Letter}");
+            System.Console.WriteLine($"The category is {InMemoryBook.OTHERCATEGORY}");
+
+        }
+
+        private static void EnterGrades(Book book)
+        {
+            while (true)
             {
                 System.Console.WriteLine("Enter the character 'q' to quit");
                 var input = Console.ReadLine();
                 if (input == "q")
                 {
-                    done = true;
-                    continue;
+                    break;
                 }
 
                 try
@@ -31,7 +39,7 @@ namespace GradeBook
                 {
                     System.Console.WriteLine(ex.Message);
                 }
-                catch(FormatException ex)
+                catch (FormatException ex)
                 {
                     System.Console.WriteLine(ex.Message);
                 }
@@ -41,13 +49,8 @@ namespace GradeBook
                 }
             }
 
-            var stats = book.GetStatistics();
-
-            System.Console.WriteLine($"The lowest grade is {stats.Low}");
-            System.Console.WriteLine($"The letter grade is {stats.Letter}");
-            System.Console.WriteLine($"The category is {Book.OTHERCATEGORY}");
-
         }
+
         static void OnGradeAdded(object sender, EventArgs e) //Will react to a particular event
         {
             System.Console.WriteLine("A grade was added");

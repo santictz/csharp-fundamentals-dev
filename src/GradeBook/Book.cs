@@ -4,12 +4,30 @@ using System.Collections.Generic;
 namespace GradeBook
 {
     public delegate void GradeAddedDelegate(object sender, EventArgs args);
-    public class Book
+    public class NamedObject //Inheretance name property
     {
-        public Book(string name)
+        public NamedObject(string name)
+        {
+            this.Name = name;
+
+        }
+        public string Name { get; set; }
+    }
+    public abstract class Book: NamedObject
+    {
+        public Book(string name): base(name)
+        {
+
+        }
+        public abstract void AddGrade(double grade); //I do not provide the implementation, the derived clases do
+    }
+
+    public class InMemoryBook : Book
+    {
+        //Base: accessing parent class constructor
+        public InMemoryBook(string name): base(name)
         {
             grades = new List<double>();
-            Name = name;
         }
         //Method overload: has a different signature (name + parameter)
         public void AddGrade(char letter)
@@ -27,18 +45,18 @@ namespace GradeBook
                     break;
                 case 'D':
                     AddGrade(60);
-                    break;  
+                    break;
                 default:
                     AddGrade(0);
                     break;
             }
         }
-        public void AddGrade(double grade)
+        public override void AddGrade(double grade)
         {
             if (grade <= 100 && grade >= 0)
             {
                 grades.Add(grade);
-                if(GradeAdded != null)
+                if (GradeAdded != null)
                 {
                     GradeAdded(this, new EventArgs());
                 }
@@ -55,14 +73,15 @@ namespace GradeBook
 
         public Statistics GetStatistics()
         {
-            var result =new Statistics();
+            var result = new Statistics();
             result.Average = 0.0;
             result.High = double.MinValue;
             result.Low = double.MaxValue;
 
             foreach (var grade in grades)
             {
-                if(grade == 42.1){
+                if (grade == 42.1)
+                {
                     //break;
                     //continue;
                 }
@@ -74,7 +93,7 @@ namespace GradeBook
 
             result.Average /= grades.Count;
 
-            switch(result.Average)
+            switch (result.Average)
             {
                 //Pattern matching: check in runtime the type of variable
                 case var d when d >= 90.0:
@@ -113,8 +132,6 @@ namespace GradeBook
         //     } 
         // }
         // private string name; 
-        public string Name { get; private set; }
-
         readonly string category = "Science"; //Initialize only in the constructor or variable initializer
         public const string OTHERCATEGORY = "Math"; //Const with uppercase
     }
