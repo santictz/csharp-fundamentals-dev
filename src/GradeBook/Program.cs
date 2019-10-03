@@ -10,6 +10,8 @@ namespace GradeBook
             var book = new Book("Scott GradeBook");
             var done = false;
 
+            book.GradeAdded += OnGradeAdded;
+
             while (!done)
             {
                 System.Console.WriteLine("Enter the character 'q' to quit");
@@ -43,7 +45,12 @@ namespace GradeBook
 
             System.Console.WriteLine($"The lowest grade is {stats.Low}");
             System.Console.WriteLine($"The letter grade is {stats.Letter}");
+            System.Console.WriteLine($"The category is {Book.OTHERCATEGORY}");
 
+        }
+        static void OnGradeAdded(object sender, EventArgs e) //Will react to a particular event
+        {
+            System.Console.WriteLine("A grade was added");
         }
     }
 

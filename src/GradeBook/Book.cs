@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace GradeBook
 {
+    public delegate void GradeAddedDelegate(object sender, EventArgs args);
     public class Book
     {
         public Book(string name)
@@ -10,7 +11,8 @@ namespace GradeBook
             grades = new List<double>();
             Name = name;
         }
-        public void AddLetterGrade(char letter)
+        //Method overload: has a different signature (name + parameter)
+        public void AddGrade(char letter)
         {
             switch (letter)
             {
@@ -36,12 +38,20 @@ namespace GradeBook
             if (grade <= 100 && grade >= 0)
             {
                 grades.Add(grade);
+                if(GradeAdded != null)
+                {
+                    GradeAdded(this, new EventArgs());
+                }
+
+                // Event to let know when we add a grade
             }
             else
             {
                 throw new ArgumentException($"Invalid {nameof(grade)}");
             }
         }
+
+        public event GradeAddedDelegate GradeAdded; //event: Makes the delegate safer to use, only events can be added to is
 
         public Statistics GetStatistics()
         {
@@ -88,6 +98,24 @@ namespace GradeBook
         }
 
         private List<double> grades;
-        public string Name;
+        // public string Name 
+        // { 
+        //     get
+        //     {
+        //         return name;
+        //     }
+        //     set
+        //     {
+        //         if (!String.IsNullOrEmpty(value))
+        //         {
+        //             name = value;
+        //         }
+        //     } 
+        // }
+        // private string name; 
+        public string Name { get; private set; }
+
+        readonly string category = "Science"; //Initialize only in the constructor or variable initializer
+        public const string OTHERCATEGORY = "Math"; //Const with uppercase
     }
 }
