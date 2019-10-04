@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GradeBook
 {
-    public delegate void GradeAddedDelegate(object sender, EventArgs args);
+    public delegate void GradeAddedDelegate(object sender, EventArgs args); 
     public class NamedObject //Inheretance name property
     {
         public NamedObject(string name)
@@ -13,15 +14,25 @@ namespace GradeBook
         }
         public string Name { get; set; }
     }
-    public abstract class Book: NamedObject
+    public abstract class Book: NamedObject, IBook
     {
         public Book(string name): base(name)
         {
 
         }
-        public abstract void AddGrade(double grade); //I do not provide the implementation, the derived clases do
-    }
 
+        public abstract event GradeAddedDelegate GradeAdded;
+        public abstract void AddGrade(double grade); //I do not provide the implementation, the derived clases do
+        public abstract Statistics GetStatistics(); //A derived class will choose to override this implementation
+
+    }
+    public interface IBook
+    {
+        void AddGrade(double grade);
+        Statistics GetStatistics();
+        string Name { get; }
+        event GradeAddedDelegate GradeAdded;
+    }
     public class InMemoryBook : Book
     {
         //Base: accessing parent class constructor
@@ -69,48 +80,15 @@ namespace GradeBook
             }
         }
 
-        public event GradeAddedDelegate GradeAdded; //event: Makes the delegate safer to use, only events can be added to is
+        public override event GradeAddedDelegate GradeAdded; //event: Makes the delegate safer to use, only events can be added to is
 
-        public Statistics GetStatistics()
+        public override Statistics GetStatistics()
         {
             var result = new Statistics();
-            result.Average = 0.0;
-            result.High = double.MinValue;
-            result.Low = double.MaxValue;
 
             foreach (var grade in grades)
             {
-                if (grade == 42.1)
-                {
-                    //break;
-                    //continue;
-                }
-
-                result.Low = Math.Min(grade, result.Low);
-                result.High = Math.Max(grade, result.High);
-                result.Average += grade;
-            }
-
-            result.Average /= grades.Count;
-
-            switch (result.Average)
-            {
-                //Pattern matching: check in runtime the type of variable
-                case var d when d >= 90.0:
-                    result.Letter = 'A';
-                    break;
-                case var d when d >= 80.0:
-                    result.Letter = 'B';
-                    break;
-                case var d when d >= 70.0:
-                    result.Letter = 'C';
-                    break;
-                case var d when d >= 60.0:
-                    result.Letter = 'D';
-                    break;
-                default:
-                    result.Letter = 'F';
-                    break;
+                result.Add(grade);
             }
 
             return result;
@@ -134,5 +112,44 @@ namespace GradeBook
         // private string name; 
         readonly string category = "Science"; //Initialize only in the constructor or variable initializer
         public const string OTHERCATEGORY = "Math"; //Const with uppercase
+    }
+    public class DiskBook : Book
+    {
+        public DiskBook(string name) : base(name)
+        {
+        }
+
+        public override event GradeAddedDelegate GradeAdded;
+
+        public override void AddGrade(double grade)
+        {
+            //Compiler creates a try catch and call a dispose when the resource is not used anymore
+            using(var writer = File.AppendText($"{Name}.txt"))
+            {
+                writer.WriteLine(grade);
+                if (GradeAdded != null)
+                {
+                    GradeAdded(this, new EventArgs());
+                }
+            }
+
+        }
+
+        public override Statistics GetStatistics()
+        {
+            var result = new Statistics();
+
+            using(var reader = File.OpenText( $"{Name}.txt"))
+            {
+                var line = reader.ReadLine();
+                while(line != null)
+                {
+                    var number = Double.Parse(line);
+                    result.Add(number);
+                }
+            }
+
+            return result;
+        }
     }
 }

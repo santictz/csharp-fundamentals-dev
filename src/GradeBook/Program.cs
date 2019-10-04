@@ -7,19 +7,20 @@ namespace GradeBook
     {
         static void Main(string[] args)
         {
-            var book = new InMemoryBook("Scott GradeBook");
+            IBook book = new DiskBook("Scott GradeBook");
 
             book.GradeAdded += OnGradeAdded;
+
+            EnterGrades(book);
 
             var stats = book.GetStatistics();
 
             System.Console.WriteLine($"The lowest grade is {stats.Low}");
             System.Console.WriteLine($"The letter grade is {stats.Letter}");
-            System.Console.WriteLine($"The category is {InMemoryBook.OTHERCATEGORY}");
 
         }
 
-        private static void EnterGrades(Book book)
+        private static void EnterGrades(IBook book)
         {
             while (true)
             {
@@ -56,5 +57,6 @@ namespace GradeBook
             System.Console.WriteLine("A grade was added");
         }
     }
+
 
 }
